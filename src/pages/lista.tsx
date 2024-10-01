@@ -1,9 +1,9 @@
 /**
- * Lista
+ * Lista ✅
  *
  * - Primeiramente vá até /src/pages/api/users/index.ts e implemente a API
  * - Obter a lista de usuários da API
- * - Renderizar a lista de usuários
+ * - Renderizar a lista de usuários 
  */
 
 import { useEffect, useState } from 'react';
@@ -20,11 +20,10 @@ export default function Lista() {
 			const data = await response.json();
 
 			if (!response.ok) throw new Error('Erro ao obter os dados');
-
 			setUsers(data);
 		} catch (error) {
 			console.error(error);
-		}
+		} 
 	}
 
 	useEffect(() => {
@@ -35,10 +34,10 @@ export default function Lista() {
 		<div className={styles.container}>
 			<div className={styles.content}>
 				<h2>Lista de usuários</h2>
-
 				<div data-list-container>
-					{/* Exemplo */}
-					<div data-list-item>ID 323 - Usuário 323 (user-323@mail.com)</div>
+					{users.map((user) => (
+						<div data-list-item key={user.id}>ID {user.id} - {user.email} ({user.email})</div>
+					))}
 				</div>
 			</div>
 		</div>
