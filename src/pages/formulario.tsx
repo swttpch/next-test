@@ -18,12 +18,24 @@ export default function Form() {
     register,
     handleSubmit: handleFormSubmit,
     formState: { errors },
+    setError,
   } = useForm<IUserCreate>();
 
   async function handleSubmit(fields: IUserCreate) {
-    await fetch('/api/users/create', {
+    const res = await fetch('/api/users/create', {
       method: 'POST',
       body: JSON.stringify(fields),
+    }).then((res) => {
+      if (res.ok) {
+        alert('Usuário criado com sucesso');
+      } else {
+        res.json().then((data) => {
+          setError('email', {
+            type: 'manual',
+            message: 'E-mail já cadastrado',
+          });
+        });
+      }
     });
   }
 

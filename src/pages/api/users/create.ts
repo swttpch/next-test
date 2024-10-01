@@ -13,28 +13,28 @@
 import { NextApiRequest, NextApiResponse } from 'next/types';
 
 import { IUser, IUserCreate } from '@/types/user.d';
+import { ApiMethod } from '@/decorators/method';
 
 const users: IUser[] = [];
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-
-	if (req.method === 'POST') {
-		return await CreateUser(req, res);
-	}
-	return res.status(500).json('Method not allowed');
-};
+export default ApiMethod('POST')(async (req: NextApiRequest, res: NextApiResponse) => {
+  return await CreateUser(req, res);
+});
 
 async function CreateUser(req: NextApiRequest, res: NextApiResponse) {
-	
-	const { name, email } = JSON.parse(req.body) as IUserCreate
-	if(!name || !email) {
-		return res.status(400).json({ message: 'Name and email are required' });
-	}	
-	const user: IUser = {
-		id: users.length + 1,
-		name,
-		email
-	};
-	users.push(user);
-	return res.status(201).json(user);
+  const { name, email } = JSON.parse(req.body) as IUserCreate;
+  if (!name || !email) {
+    return res.status(400).json({ message: 'Name and email are required' });
+  }
+  if (users.filter((user) => user.email === email).length > 0) {
+    return res.status(400).json({ message: 'Email already exists' });
+  }
+  const user: IUser = {
+    id: users.length + 1,
+    name,
+    email,
+  };
+  users.push(user);
+  console.log(users);
+  return res.status(201).json(user);
 }
