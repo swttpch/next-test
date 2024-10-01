@@ -16,6 +16,25 @@ import { IUser, IUserCreate } from '@/types/user.d';
 
 const users: IUser[] = [];
 
-export default (req: NextApiRequest, res: NextApiResponse) => {
-	return res.status(400).json(undefined);
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+
+	if (req.method === 'POST') {
+		return await CreateUser(req, res);
+	}
+	return res.status(500).json('Method not allowed');
 };
+
+async function CreateUser(req: NextApiRequest, res: NextApiResponse) {
+	
+	const { name, email } = JSON.parse(req.body) as IUserCreate
+	if(!name || !email) {
+		return res.status(400).json({ message: 'Name and email are required' });
+	}	
+	const user: IUser = {
+		id: users.length + 1,
+		name,
+		email
+	};
+	users.push(user);
+	return res.status(201).json(user);
+}
