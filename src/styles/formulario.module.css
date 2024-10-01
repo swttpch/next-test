@@ -30,3 +30,12 @@
 	width: 50%;
 	margin-left: auto;
 }
+
+.content form .input-invalid {
+	border: 1px solid red;
+}
+
+.content form .error-message {
+	color: red;
+	font-size: 0.875rem;
+}

@@ -10,26 +10,63 @@
  */
 
 import styles from '@/styles/formulario.module.css';
+import { IUserCreate } from '@/types/user';
+import { useForm } from 'react-hook-form';
 
 export default function Form() {
-	function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-		event.preventDefault();
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors },
+  } = useForm<IUserCreate>();
 
-		console.log('submit');
-	}
+  async function handleSubmit(fields: IUserCreate) {
+    await fetch('/api/users/create', {
+      method: 'POST',
+      body: JSON.stringify(fields),
+    });
+  }
 
-	return (
-		<div className={styles.container}>
-			<div className={styles.content}>
-				<form onSubmit={handleSubmit}>
-					<input type="text" placeholder="Name" />
-					<input type="email" placeholder="E-mail" />
+  return (
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <form
+          onSubmit={handleFormSubmit((e) => {
+            handleSubmit(e);
+          })}
+        >
+          <input
+            type="text"
+            className={errors.name && styles['input-invalid']}
+            placeholder="Name"
+            {...register('name', {
+              required: 'Campo obrigatório',
+              minLength: {
+                message: 'Mínimo de 3 caracteres',
+                value: 3,
+              },
+            })}
+          />
+          {errors.name && <span className={styles['error-message']}>{errors.name.message}</span>}
+          <input
+            type="email"
+            className={errors.email && styles['input-invalid']}
+            placeholder="E-mail"
+            {...register('email', {
+              required: 'Campo obrigatório',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'E-mail inválido',
+              },
+            })}
+          />
 
-					<button type="submit" data-type="confirm">
-						Enviar
-					</button>
-				</form>
-			</div>
-		</div>
-	);
+          {errors.email && <span className={styles['error-message']}>{errors.email.message}</span>}
+          <button type="submit" data-type="confirm">
+            Enviar
+          </button>
+        </form>
+      </div>
+    </div>
+  );
 }
