@@ -15,7 +15,26 @@ import { NextApiRequest, NextApiResponse } from 'next/types';
 import { IUser } from '@/types/user.d';
 
 export default (req: NextApiRequest, res: NextApiResponse) => {
-	const users: Array<unknown> = [];
+	const users: Array<IUser> = [
+		{
+			id: 1,
+			name: 'User One',
+			email: 'one@user.com'
+		},
+		{
+			id: 2,
+			name: 'User Two',
+			email: 'two@user.com'
+		},
+		{
+			id: 3,
+			name: 'User Three',
+			email: 'three@user.com'
+		},
+	];
 
-	return res.status(500).json(users);
+	if (req.method === 'GET') {
+		return res.status(200).json(users);
+	}
+	return res.status(500).send('Method not allowed');
 };
