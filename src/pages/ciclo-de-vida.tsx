@@ -20,58 +20,79 @@ import { GetServerSideProps } from 'next/types';
 import styles from '@/styles/ciclo-de-vida.module.css';
 import { Counter } from '@/components/Counter';
 import { useEffect, useState } from 'react';
+import { subscribe, unsubscribe } from '@/utils/events';
 
 type CicloDeVidaProps = {
-	initialCount: number;
+  initialCount: number;
 };
 
 export default function CicloDeVida({ initialCount }: CicloDeVidaProps) {
-	const [showCounter, setShowCounter] = useState(false);
-	const [count, setCount] = useState(0);
+  const [showCounter, setShowCounter] = useState(false);
+  const [count, setCount] = useState(0);
 
-	function handleOcultCounterClick() {
-		setShowCounter((prevState) => !prevState);
-	}
+  function onToggleCounterClick() {
+    setShowCounter((prevState) => !prevState);
+  }
 
-	useEffect(() => {
-		window.addEventListener('onCounterMount', (event: CustomEventInit) => {
-			console.log('onCounterMount');
-		});
+  useEffect(() => {
+    subscribe('onCounterMount', () => {
+      console.log('onCounterMount');
+    });
 
-		window.addEventListener('onCounterUnmount', (event: CustomEventInit) => {
-			console.log('onCounterUnmount');
-		});
+    subscribe('onCounterUnmount', () => {
+      console.log('onCounterUnmount');
+    });
 
-		window.addEventListener('onCounterUpdate', (event: CustomEventInit) => {
-			console.log('onCounterUpdate');
-		});
-	}, []);
+    subscribe('onCounterUpdate', (event) => {
+      console.log('onCounterUpdate', event.detail);
+      setCount(event.detail.count);
+    });
 
-	return (
-		<div className={styles.container}>
-			<div>
-				<button type="button" onClick={handleOcultCounterClick}>
-					{showCounter ? 'Ocultar contador' : 'Mostrar contador'}
-				</button>
+    return () => {
+      unsubscribe('onCounterMount', () => {
+        console.log('onCounterMount');
+      });
+      unsubscribe('onCounterUnmount', () => {
+        console.log('onCounterUnmount');
+      });
 
-				{showCounter && (
-					<>
-						<h1>Exemplo de Ciclo de vida</h1>
+      unsubscribe('onCounterUpdate', (event) => {
+        console.log('onCounterUpdate', event.detail);
+      });
+    };
+  }, []);
 
-						<div data-content>
-							<Counter initialCount={initialCount} />
-						</div>
-					</>
-				)}
-			</div>
-		</div>
-	);
+  useEffect(() => {
+    if (count === 10) {
+      setShowCounter(false);
+    }
+  }, [count]);
+
+  return (
+    <div className={styles.container}>
+      <div>
+        <button type="button" onClick={onToggleCounterClick}>
+          {showCounter ? 'Ocultar contador' : 'Mostrar contador'}
+        </button>
+
+        {showCounter && (
+          <>
+            <h1>Exemplo de Ciclo de vida</h1>
+
+            <div data-content>
+              <Counter initialCount={initialCount} />
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 }
 
 export const getServerSideProps: GetServerSideProps<CicloDeVidaProps> = async () => {
-	return {
-		props: {
-			initialCount: 0,
-		},
-	};
+  return {
+    props: {
+      initialCount: 0,
+    },
+  };
 };
