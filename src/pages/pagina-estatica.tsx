@@ -7,49 +7,54 @@
  * - A página deve ser atualizada a cada 1 minuto
  */
 
-import { useEffect, useState } from 'react';
-
 import styles from '@/styles/lista.module.css';
 import { ICity } from '@/types/city.d';
+import { getCities } from './api/cities/[length]';
+type PageProps = {
+  list: ICity[];
+};
 
-export default function Lista() {
-	const [list, setUsers] = useState<Array<ICity>>([
-		{
-			id: new Date().getTime().toString(),
-			name: 'São Paulo',
-		},
-	]);
+export default function Lista({ list }: PageProps) {
+  return (
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <h2>Lista de cidades</h2>
 
-	async function getList() {
-		try {
-			const response = await fetch('/api/cities/10');
-			const data = await response.json();
+        <div data-list-container>
+          {list.map((city) => (
+            <div data-list-item key={city.id}>
+              {city.name}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 
-			if (!response.ok) throw new Error('Erro ao obter os dados');
+export async function getStaticProps() {
+  const defaultList = [
+    {
+      id: new Date().getTime().toString(),
+      name: 'São Paulo',
+    },
+  ];
 
-			setUsers(data);
-		} catch (error) {
-			console.error(error);
-		}
-	}
-
-	useEffect(() => {
-		getList();
-	}, []);
-
-	return (
-		<div className={styles.container}>
-			<div className={styles.content}>
-				<h2>Lista de cidades</h2>
-
-				<div data-list-container>
-					{list.map((city) => (
-						<div data-list-item key={city.id}>
-							{city.name}
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	);
+  try {
+    const response = await getCities(10);
+    return {
+      props: {
+        list: response,
+      },
+      revalidate: 60,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      props: {
+        list: defaultList,
+      },
+      revalidate: 60,
+    };
+  }
 }
