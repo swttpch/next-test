@@ -3,9 +3,14 @@ import styles from '@/styles/context-api.module.css';
 import { ToastMessage } from '@/components/ToastMessage';
 import { IToastMessage } from '@/types/toast-message';
 
+type MessagePartialType = {
+  message: string;
+  duration?: number;
+};
+
 type MessageContextType = {
-  showSuccessMessage: () => void;
-  showErrorMessage: () => void;
+  showSuccessMessage: (props: MessagePartialType) => void;
+  showErrorMessage: (props: MessagePartialType) => void;
 };
 
 const MessageContext = createContext<MessageContextType | undefined>(undefined);
@@ -13,19 +18,19 @@ const MessageContext = createContext<MessageContextType | undefined>(undefined);
 export const MessageProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<IToastMessage[]>([]);
 
-  const showSuccessMessage = () => {
+  const showSuccessMessage = ({ message, duration }: MessagePartialType) => {
     setMessages((old) => {
       const lenght = old.length;
       const id = lenght + 1;
-      return [...old, { id: id.toString(), message: 'Mensagem de sucesso', type: 'success' }];
+      return [...old, { id: id.toString(), message, type: 'success', duration }];
     });
   };
 
-  const showErrorMessage = () => {
+  const showErrorMessage = ({ message, duration }: MessagePartialType) => {
     setMessages((old) => {
       const lenght = old.length;
       const id = lenght + 1;
-      return [...old, { id: id.toString(), message: 'Mensagem de erro', type: 'error' }];
+      return [...old, { id: id.toString(), message, type: 'error', duration }];
     });
   };
 

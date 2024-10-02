@@ -5,11 +5,11 @@ function ShowMessages() {
   const { showErrorMessage, showSuccessMessage } = useMessage();
 
   function handleSuccessButtonClick() {
-    showSuccessMessage();
+    showSuccessMessage({ message: 'Mensagem de sucesso' });
   }
 
   function handleErrorButtonClick() {
-    showErrorMessage();
+    showErrorMessage({ message: 'Mensagem de erro' });
   }
   return (
     <>
