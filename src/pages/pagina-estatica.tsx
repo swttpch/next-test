@@ -1,5 +1,5 @@
 /**
- * Página estática
+ * Página estática ✅
  *
  * - Atualmente o conteúdo é gerado no momento em que a requisição é feita
  * - Você deve transformar essa página em uma página estática

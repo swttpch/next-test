@@ -1,7 +1,7 @@
 /**
- * Modal
+ * Modal ✅
  *
- * - O modal fecha ao clicar em qualquer elemento, resolva o problema ✅
+ * - O modal fecha ao clicar em qualquer elemento, resolva o problema 
  */
 
 import { useState } from 'react';

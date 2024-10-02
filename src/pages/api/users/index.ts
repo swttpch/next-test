@@ -1,7 +1,7 @@
 /**
  * @api {get} /api/users Read list
  *
- * Resolva o exercício aqui:
+ * Resolva o exercício aqui: ✅
  *
  * - Crie uma API que retorne uma lista de usuários
  * - A request deve receber apenas o método GET

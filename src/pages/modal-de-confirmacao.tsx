@@ -1,5 +1,5 @@
 /**
- * Modal de confirmação
+ * Modal de confirmação ✅
  *
  * - Crie um component para o modal de confirmação
  * - Utilize o código abaixo como base

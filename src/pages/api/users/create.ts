@@ -1,7 +1,7 @@
 /**
  * @api {get} /api/users/create Create User
  *
- * Resolva o exercício aqui:
+ * Resolva o exercício aqui: ✅
  *
  * - Crie uma API que registre um usuário no array users
  * - A request deve receber apenas o método POST

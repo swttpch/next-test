@@ -1,5 +1,5 @@
 /**
- * Ciclo de Vida
+ * Ciclo de Vida ✅
  *
  * - No evento de montagem deste component, deve ser registrados os seguintes events listeners:
  *  	- onCounterMount
